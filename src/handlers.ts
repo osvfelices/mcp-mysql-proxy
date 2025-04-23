@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { executeQuery } from "./mysql";
+import { executeQuery, getDatabaseSchema } from "./mysql";
 import { logger } from "./logger";
 
 interface MCPRequestBody {
@@ -12,18 +12,18 @@ export async function handleMCPRequest(
 ): Promise<void> {
   const { query } = req.body as MCPRequestBody;
 
-  if (!query || typeof query !== "string") {
-    res
-      .status(400)
-      .json({ error: "Missing or invalid 'query' field in request body" });
-    return;
-  }
-
   try {
+    // If no query is provided, return database schema (used by Cursor for chart)
+    if (!query || typeof query !== "string") {
+      const schema = await getDatabaseSchema();
+      res.status(200).json({ result: schema });
+      return;
+    }
+
     const result = await executeQuery(query);
     res.status(200).json({ result });
   } catch (err: any) {
-    logger.warn("Error executing query", { query, error: err.message });
+    logger.warn("Error processing MCP request", { query, error: err.message });
     res.status(500).json({ error: err.message });
   }
 }

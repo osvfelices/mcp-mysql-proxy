@@ -81,3 +81,33 @@ export async function executeQuery(sql: string): Promise<any> {
     connection.release();
   }
 }
+
+export async function getDatabaseSchema(): Promise<any> {
+  const connection = await pool.getConnection();
+  try {
+    const [rows] = await connection.query(
+      `
+      SELECT table_name, column_name, data_type
+      FROM information_schema.columns
+      WHERE table_schema = ?
+      ORDER BY table_name, ordinal_position
+      `,
+      [config.MYSQL_DB]
+    );
+
+    const schema: Record<string, any> = {};
+    for (const row of rows as any[]) {
+      if (!schema[row.table_name]) {
+        schema[row.table_name] = [];
+      }
+      schema[row.table_name].push({
+        column: row.column_name,
+        type: row.data_type,
+      });
+    }
+
+    return schema;
+  } finally {
+    connection.release();
+  }
+}
