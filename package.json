@@ -1,0 +1,43 @@
+{
+  "name": "mcp-mysql-proxy",
+  "version": "1.0.0",
+  "description": "A TypeScript MCP server for accessing MySQL databases from Cursor, Claude, Codex, and other AI tools.",
+  "main": "dist/bin.js",
+  "bin": {
+    "mcp-mysql-proxy": "dist/bin.js"
+  },
+  "scripts": {
+    "dev": "ts-node src/bin.ts",
+    "build": "tsup src/bin.ts --format esm,cjs --dts",
+    "start": "node dist/bin.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.5.0",
+    "express": "^4.21.2",
+    "mysql2": "^3.4.3",
+    "winston": "^3.17.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "ts-node": "^10.9.2",
+    "tsup": "^7.3.0",
+    "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "mcp",
+    "mysql",
+    "cursor",
+    "claude",
+    "codex",
+    "typescript",
+    "proxy",
+    "ai",
+    "llm",
+    "database"
+  ],
+  "author": "Osvaldo Felices",
+  "license": "MIT"
+}
