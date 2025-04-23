@@ -1,6 +1,6 @@
 {
   "name": "mcp-mysql-proxy",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A TypeScript MCP server for accessing MySQL databases from Cursor, Claude, Codex, and other AI tools.",
   "main": "dist/bin.js",
   "bin": {
