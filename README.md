@@ -12,6 +12,7 @@
 - ✅ Fully typed and production-ready (TypeScript + Node.js)
 - ✅ Zero-config support via `npx`
 - ✅ Integration-ready with Cursor IDE, Claude Desktop, Codex, Visual Studio Code (experimental)
+- ✅ **Automatic port selection:** If the configured port (default 3000) is in use, the proxy will automatically try the next available port up to 3010.
 
 ---
 
@@ -42,8 +43,10 @@ pnpm run build
 ## Usage with `npx`
 
 ```bash
-npx -y mcp-mysql-proxy
+PORT=3001 npx -y mcp-mysql-proxy
 ```
+
+If the specified port is already in use, the proxy will automatically try the next available port up to 3010 and log the port it is running on.
 
 To use custom environment settings, create a `.env` file or pass variables inline.
 
@@ -71,7 +74,7 @@ ALLOW_DELETE_OPERATION=false
 # ┌──────────────────────────────┐
 # │        Server Settings       │
 # └──────────────────────────────┘
-PORT=3000
+PORT=3001
 NODE_ENV=development
 ```
 
@@ -95,7 +98,8 @@ NODE_ENV=development
         "MYSQL_DB": "your_database",
         "ALLOW_INSERT_OPERATION": "false",
         "ALLOW_UPDATE_OPERATION": "false",
-        "ALLOW_DELETE_OPERATION": "false"
+        "ALLOW_DELETE_OPERATION": "false",
+        "PORT": "3001"
       }
     }
   }
@@ -120,7 +124,8 @@ Edit your `claude_desktop_config.json`:
         "MYSQL_DB": "your_database",
         "ALLOW_INSERT_OPERATION": "false",
         "ALLOW_UPDATE_OPERATION": "false",
-        "ALLOW_DELETE_OPERATION": "false"
+        "ALLOW_DELETE_OPERATION": "false",
+        "PORT": "3001"
       }
     }
   }

@@ -6,6 +6,8 @@ import { logger } from "./logger";
 export async function startServer(): Promise<void> {
   const app = express();
   const { PORT } = getConfig();
+  const MIN_PORT = PORT;
+  const MAX_PORT = 3010;
 
   app.use(express.json());
 
@@ -21,7 +23,14 @@ export async function startServer(): Promise<void> {
     res.status(404).json({ error: "Not Found" });
   });
 
-  app.listen(PORT, () => {
-    logger.info(`MCP MySQL Proxy running on port ${PORT}`);
+  const getPort = (await import("get-port")).default;
+  const port = await getPort({
+    port: Array.from(
+      { length: MAX_PORT - MIN_PORT + 1 },
+      (_, i) => MIN_PORT + i
+    ),
+  });
+  app.listen(port, () => {
+    logger.info(`MCP MySQL Proxy running on port ${port}`);
   });
 }
