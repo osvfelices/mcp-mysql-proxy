@@ -2,6 +2,7 @@ import express, { Request, Response } from "express";
 import { getConfig } from "./config";
 import { handleMCPRequest } from "./handlers";
 import { logger } from "./logger";
+import findFreePort from "find-free-port";
 
 export async function startServer(): Promise<void> {
   const app = express();
@@ -23,13 +24,14 @@ export async function startServer(): Promise<void> {
     res.status(404).json({ error: "Not Found" });
   });
 
-  const getPort = (await import("get-port")).default;
-  const port = await getPort({
-    port: Array.from(
-      { length: MAX_PORT - MIN_PORT + 1 },
-      (_, i) => MIN_PORT + i
-    ),
+  // Encontrar un puerto disponible en el rango especificado
+  const port = await new Promise<number>((resolve, reject) => {
+    findFreePort(MIN_PORT, MAX_PORT, (err: Error | null, freePort: number) => {
+      if (err) reject(err);
+      resolve(freePort);
+    });
   });
+
   app.listen(port, () => {
     logger.info(`MCP MySQL Proxy running on port ${port}`);
   });
